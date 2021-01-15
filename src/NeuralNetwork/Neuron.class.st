@@ -58,14 +58,14 @@ Neuron >> learningRate: aNumber [
 
 { #category : #accessing }
 Neuron >> train: inputs desiredOutput: desiredOutput [
-	| theError output newWeight |
+	| diff output newWeight |
 	output := self feed: inputs.
-	theError := desiredOutput - output .
+	diff := desiredOutput - output .
 	inputs withIndexDo: [ :anInput :index|
-		newWeight := (weights at: index) + (learningRate * theError * anInput).
+		newWeight := (weights at: index) + (diff * anInput * learningRate).
 		weights at: index put: newWeight 
 		 ].
-	bias := bias + (learningRate * theError)
+	bias := bias + (diff * learningRate)
 ]
 
 { #category : #accessing }
