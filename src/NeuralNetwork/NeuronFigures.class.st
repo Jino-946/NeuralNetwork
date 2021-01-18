@@ -1,3 +1,8 @@
+"
+- Figureを作成するスクリプトをメソッドにする
+- ""Agile Artificial Intelligence In Pharo"" のFigureグラフを作成するスクリプトを管理するためのクラス
+
+"
 Class {
 	#name : #NeuronFigures,
 	#superclass : #Object,
