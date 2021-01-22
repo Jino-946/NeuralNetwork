@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'weights',
 		'bias',
-		'learningRate'
+		'learningRate',
+		'activationFunction'
 	],
 	#category : #NeuralNetwork
 }
@@ -27,15 +28,14 @@ Neuron >> bias: aNumber [
 Neuron >> feed: inputs [
 	| z |
 	z := (inputs with: weights collect: [ :x :w | x * w ]) sum + bias.
-	^ z > 0 ifTrue: [ 1 ] ifFalse: [ 0 ]
-	
-
+	^ activationFunction eval: z
 ]
 
 { #category : #accessing }
 Neuron >> initialize [ 
 	super initialize.
-	learningRate := 0.1
+	learningRate := 0.1.
+	self sigmoid
 
 ]
 
@@ -48,24 +48,35 @@ Neuron >> learningRate [
 ]
 
 { #category : #accessing }
-Neuron >> learningRate: aNumber [
+Neuron >> learningRate: aLearningRateAsFloat [
 	"set the learningRate of the neuron."
-	learningRate := aNumber 
+	learningRate := aLearningRateAsFloat  
 	
 	
 	
 ]
 
+{ #category : #activating }
+Neuron >> sigmoid [
+	"Use the sigmoid activation function"
+    activationFunction := SigmoidAF new
+]
+
+{ #category : #activating }
+Neuron >> step [
+	"Use the step activation function"
+    activationFunction := StepAF new
+]
+
 { #category : #accessing }
 Neuron >> train: inputs desiredOutput: desiredOutput [
-	| diff output newWeight |
+	| diff output delta |
 	output := self feed: inputs.
 	diff := desiredOutput - output .
-	inputs withIndexDo: [ :anInput :index|
-		newWeight := (weights at: index) + (diff * anInput * learningRate).
-		weights at: index put: newWeight 
-		 ].
-	bias := bias + (diff * learningRate)
+    delta := diff * (activationFunction derivative: output).
+	inputs withIndexDo: [ :anInput :index |
+		weights at: index put: ((weights at: index) + (delta * anInput * learningRate))].
+	bias := bias + (delta * learningRate)
 ]
 
 { #category : #accessing }

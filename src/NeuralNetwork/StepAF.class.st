@@ -4,12 +4,12 @@ Class {
 	#category : #NeuralNetwork
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #overrides }
 StepAF >> derivative: output [ 
 	^ 1
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #overrides }
 StepAF >> eval: z [
 	^ (z > 0) ifTrue: [ 1 ] ifFalse: [ 0 ]
 ]
