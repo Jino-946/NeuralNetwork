@@ -6,7 +6,7 @@ Class {
 
 { #category : #overrides }
 SigmoidAF >> derivative: output [ 
-	^ 1 / (1 - output)
+	^ 1 * (1 - output)
 ]
 
 { #category : #overrides }
