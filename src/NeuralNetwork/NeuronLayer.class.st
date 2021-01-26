@@ -9,6 +9,17 @@ Class {
 	#category : #NeuralNetwork
 }
 
+{ #category : #accessing }
+NeuronLayer >> feed: someInputValues [
+	"Feed the neuron layer with some inputs"
+    | someOutputs |
+    someOutputs := neurons collect: [ :n | n feed: someInputValues ] as: Array.
+    ^ self isOutputLayer
+    	ifTrue: [ someOutputs]
+		ifFalse: [ nextLayer feed: someOutputs]
+
+]
+
 { #category : #initialization }
 NeuronLayer >> initializeNbOfNeurons: nbOfNeurons nbOfWights: nbOfWeights using: random [
 	"Main method to initialize a neuron layer
@@ -27,6 +38,15 @@ NeuronLayer >> initializeNbOfNeurons: nbOfNeurons nbOfWights: nbOfWeights using:
 ]
 
 { #category : #accessing }
+NeuronLayer >> isOutputLayer [
+	"Return true if the layer is the output layer
+     (i.e., the last layer, right-most in the network)"
+    ^ self nextLayer isNil
+
+
+]
+
+{ #category : #accessing }
 NeuronLayer >> learningRate: aLearningRate [
 	" 
 	Set the learning rate for all neurons
@@ -36,4 +56,40 @@ NeuronLayer >> learningRate: aLearningRate [
     self assert: [ neurons notEmpty] description: 'learningRate: should be invoked after configuring the layer'.
          
     neurons do: [ :n | n learningRate: aLearningRate]
+]
+
+{ #category : #accessing }
+NeuronLayer >> neurons [
+	"Return the neurons I am composed of"
+    ^neurons
+]
+
+{ #category : #accessing }
+NeuronLayer >> nextLayer [
+	"Return the next layer connected to me"
+    ^nextLayer
+]
+
+{ #category : #accessing }
+NeuronLayer >> nextLayer: aLayer [
+	"Set the next layer"
+    nextLayer := aLayer
+]
+
+{ #category : #accessing }
+NeuronLayer >> numberOfNeurons [
+	"Return the number of neurons in the layer"
+    ^neurons size
+]
+
+{ #category : #accessing }
+NeuronLayer >> previousLayer [
+	"Return the previous layer connected to me"
+    ^previousLayer
+]
+
+{ #category : #accessing }
+NeuronLayer >> previousLayer: aLayer [
+	"Set the previous layer"
+    previousLayer := aLayer
 ]
