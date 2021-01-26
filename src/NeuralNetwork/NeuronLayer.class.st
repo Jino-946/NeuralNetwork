@@ -21,7 +21,7 @@ NeuronLayer >> feed: someInputValues [
 ]
 
 { #category : #initialization }
-NeuronLayer >> initializeNbOfNeurons: nbOfNeurons nbOfWights: nbOfWeights using: random [
+NeuronLayer >> initializeNbOfNeurons: nbOfNeurons nbOfWeights: nbOfWeights using: random [
 	"Main method to initialize a neuron layer
 	 nbOfNeurons : number of neurons the layer should be made of
 	 nbOfWeights : nember of weightd each neuron should have

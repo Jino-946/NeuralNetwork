@@ -16,3 +16,8 @@ ManifestNeuralNetwork class >> ruleRBImplementedNotSentRuleV1FalsePositive [
 ManifestNeuralNetwork class >> ruleRBLongMethodsRuleV1FalsePositive [
 	^ #(#(#(#RGClassDefinition #(#NeuronFigures)) #'2021-01-17T14:44:33.706312+09:00') )
 ]
+
+{ #category : #'code-critics' }
+ManifestNeuralNetwork class >> ruleReTestClassNotInPackageWithTestEndingNameV1FalsePositive [
+	^ #(#(#(#RGPackageDefinition #(#NeuralNetwork)) #'2021-01-26T16:37:47.676437+09:00') )
+]
