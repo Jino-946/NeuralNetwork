@@ -5,7 +5,9 @@ Class {
 		'weights',
 		'bias',
 		'learningRate',
-		'activationFunction'
+		'activationFunction',
+		'delta',
+		'output'
 	],
 	#category : #NeuralNetwork
 }
@@ -25,10 +27,17 @@ Neuron >> bias: aNumber [
 ]
 
 { #category : #accessing }
+Neuron >> delta [
+	"エラーを伝播する際に計算したdelta値を返す"
+    ^ delta
+]
+
+{ #category : #accessing }
 Neuron >> feed: inputs [
 	| z |
 	z := (inputs with: weights collect: [ :x :w | x * w ]) sum + bias.
-	^ activationFunction eval: z
+	output := activationFunction eval: z .
+	^ output
 ]
 
 { #category : #accessing }
@@ -54,6 +63,12 @@ Neuron >> learningRate: aLearningRateAsFloat [
 	
 	
 	
+]
+
+{ #category : #accessing }
+Neuron >> output [
+	"feed:を実行した時に計算されたoutput値を返す"
+	^ output
 ]
 
 { #category : #activating }
