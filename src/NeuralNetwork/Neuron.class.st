@@ -13,6 +13,23 @@ Class {
 }
 
 { #category : #accessing }
+Neuron >> adjustBias [
+	bias := bias + (learningRate * delta)
+]
+
+{ #category : #activating }
+Neuron >> adjustDeltaWith: anError [
+	delta := anError * (activationFunction derivative: output)
+]
+
+{ #category : #accessing }
+Neuron >> adjustWeightWithInput: inputs [
+	inputs withIndexDo: [ :anInput :index |
+		weights at: index put: ((weights at: index) + (learningRate * delta * anInput))
+	]
+]
+
+{ #category : #accessing }
 Neuron >> bias [
 	"return the bias of the neuron."
 	^bias

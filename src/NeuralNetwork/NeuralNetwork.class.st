@@ -20,6 +20,25 @@ NeuralNetwork >> addLayer: aNeuronLayer [
 ]
 
 { #category : #initialization }
+NeuralNetwork >> backwardPropagateError: expectedOutputs [
+	"expectedOutputsはトレーニングしているネットワークからの出力に対応している"
+	 self outputLayer backwardPropagateError: expectedOutputs 
+]
+
+{ #category : #initialization }
+NeuralNetwork >> configure: nbOfInputs hidden: nbOfNeurons1 hidden: nbOfNeurons2 hidden: nbOfNeurons3 nbOfOutputs: nbOfOutput [
+	"与えられた引数でネットワークを構成する。
+	 ネットワークは3層の隠れ層を持つ"
+	| random |
+	random := Random seed: 42 .
+	self addLayer: (NeuronLayer new initializeNbOfNeurons: nbOfNeurons1  nbOfWeights: nbOfInputs   using: random).
+	self addLayer: (NeuronLayer new initializeNbOfNeurons: nbOfNeurons2  nbOfWeights: nbOfNeurons1  using: random).
+	self addLayer: (NeuronLayer new initializeNbOfNeurons: nbOfNeurons3  nbOfWeights: nbOfNeurons2  using: random).
+	self addLayer: (NeuronLayer new initializeNbOfNeurons: nbOfOutput   nbOfWeights: nbOfNeurons3  using: random).
+	
+]
+
+{ #category : #initialization }
 NeuralNetwork >> configure: nbOfInputs hidden: nbOfNeurons1 hidden: nbOfNeurons2  nbOfOutputs: nbOfOutput [
 	"与えられた引数でネットワークを構成する。
 	 ネットワークは2層の隠れ層を持つ"
@@ -67,4 +86,24 @@ NeuralNetwork >> learningRate: aLearningRate [
 NeuralNetwork >> numberOfOutputs [
 	" ネットワークの出力数を返す"
 	^ layers last numberOfNeurons 
+]
+
+{ #category : #initialization }
+NeuralNetwork >> outputLayer [
+	"出力層を返す、ようするに最終層"
+	^ layers last
+]
+
+{ #category : #initialization }
+NeuralNetwork >> train: someInputs desiredOutputs: desiredOutputs [
+	"ニューラルネットワークを入力値と期待する出力でトレーニングする"
+	self feed: someInputs .
+	self backwardPropagateError: desiredOutputs .
+	self updateWeight: someInputs 
+]
+
+{ #category : #initialization }
+NeuralNetwork >> updateWeight: initialInputs [
+	"初期の入力値を用いニューロンの重みを更新する"
+	layers first updateWeight: initialInputs 
 ]

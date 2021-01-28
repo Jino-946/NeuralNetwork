@@ -10,6 +10,38 @@ Class {
 }
 
 { #category : #accessing }
+NeuronLayer >> backwardPropagateError [
+	"再帰メソッド。伝播は最終層である出力層から始まる"
+	
+	"現在地は隠れ層"
+	neurons doWithIndex: [ :neuron :j |
+		| theError |
+		theError := 0.0 .
+		self nextLayer neurons do: [ :nextNeuron |
+			theError := theError + ((nextNeuron weights at: j) * nextNeuron delta)
+		].
+		neuron adjustDeltaWith: theError
+	] .
+	self previousLayer notNil 
+		ifTrue: [ self previousLayer backwardPropagateError ]
+]
+
+{ #category : #accessing }
+NeuronLayer >> backwardPropagateError: expected [ 
+	"再帰メソッド最終層である出力層から伝播は開始される"
+
+	"現在地は出力層"
+	neurons with: expected do: [ :neuron :exp |
+		| theError |
+		theError := exp - neuron output .
+		neuron adjustDeltaWith: theError ] .
+	
+	"繰り返す"
+	self previousLayer notNil 
+		ifTrue: [  self previousLayer backwardPropagateError ].
+]
+
+{ #category : #accessing }
 NeuronLayer >> feed: someInputValues [
 	"Feed the neuron layer with some inputs"
     | someOutputs |
@@ -92,4 +124,35 @@ NeuronLayer >> previousLayer [
 NeuronLayer >> previousLayer: aLayer [
 	"Set the previous layer"
     previousLayer := aLayer
+]
+
+{ #category : #accessing }
+NeuronLayer >> updateWeight [
+	"初期入力を元にニューロンの重みを更新する。
+	 このメソッドは、メソッドを呼び出すメッセージのレシーバが
+	 最初の隠れ層であることを前提としている。
+	
+	現在地は2番目の隠れ層または出力層
+	"
+	| inputs |
+	inputs := self previousLayer neurons collect: #output .
+	
+	self updateWeight: inputs 
+
+]
+
+{ #category : #accessing }
+NeuronLayer >> updateWeight: initialInputs [
+	"初期入力を元にニューロンの重みを更新する。
+	 このメソッドは、メソッドを呼び出すメッセージのレシーバが
+	 最初の隠れ層であることを前提としている。
+	"
+	| inputs |
+	inputs := initialInputs .
+	
+	neurons do: [ :n |
+		n adjustWeightWithInput: inputs .
+		n adjustBias ].
+	
+	self nextLayer ifNotNil: [ self nextLayer updateWeight ]
 ]

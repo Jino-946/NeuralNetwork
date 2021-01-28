@@ -8,6 +8,16 @@ Class {
 }
 
 { #category : #'code-critics' }
+ManifestNeuralNetwork class >> ruleRBCodeCruftLeftInMethodsRuleV1FalsePositive [
+	^ #(#(#(#RGMethodDefinition #(#NeuralNetworkTest #testXOR #false)) #'2021-01-28T12:46:48.063138+09:00') )
+]
+
+{ #category : #'code-critics' }
+ManifestNeuralNetwork class >> ruleRBGlobalVariablesUsageV1FalsePositive [
+	^ #(#(#(#RGMethodDefinition #(#NeuralNetworkTest #testXOR #false)) #'2021-01-28T12:46:36.62886+09:00') )
+]
+
+{ #category : #'code-critics' }
 ManifestNeuralNetwork class >> ruleRBImplementedNotSentRuleV1FalsePositive [
 	^ #(#(#(#RGClassDefinition #(#NeuronFigures)) #'2021-01-17T14:44:47.429824+09:00') )
 ]
