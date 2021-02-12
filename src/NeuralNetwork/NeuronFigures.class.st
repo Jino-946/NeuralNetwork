@@ -363,10 +363,10 @@ NeuronFigures >> figure4_3 [
 		b := b - (learningRate * deriMSEb).
 	].
 	
-	"
+	
 	Transcript cr; show: 'a -> '; show: a.
 	Transcript cr; show: 'b -> '; show: b.
-	"
+	
 	g := RTGrapher new.
 	d := RTData new.
 	d dotShape color: Color red.
@@ -379,6 +379,44 @@ NeuronFigures >> figure4_3 [
 	d points: (0 to: 5).
 	d x: #yourself.
 	d y: f.
+	g add: d.
+	^g
+	
+]
+
+{ #category : #example }
+NeuronFigures >> figure4_4 [
+	"P78  Figure 4-4
+	 Variation of the MSE cost function
+	
+	 NeuronFigures new figure4_4
+	"
+	|a b f points learningRate deriMSEa deriMSEb result mse g d |
+	points := { (1 @ 3.0). (3 @ 5.2). (2 @ 4.1). (4 @ 7.5) }.
+	
+	a := 0.5.
+	b := 3.
+	f := [ :x | a * x + b ].
+	learningRate := 0.01.
+	
+	result := OrderedCollection new.
+	1000 timesRepeat: [ 
+		deriMSEa := (2 / points size) * (points collect: [ :aPoint | 
+			aPoint x * (aPoint y - (f value: aPoint x)) negated ]) sum.
+		deriMSEb := (2 / points size) * (points collect: [ :aPoint |
+			1 * ( aPoint y - (f value: aPoint x)) negated ]) sum.
+		a := a - (learningRate * deriMSEa).
+		b := b - (learningRate * deriMSEb).
+		mse := (points collect: [ :aPoint | (aPoint y - (f value: aPoint x)) squared ]) sum / points size.
+		result add: mse.
+	].
+	
+	
+	g := RTGrapher new.
+	d := RTData new.
+	d noDot; connectColor: Color blue.
+	d points: result  .
+	d y: #yourself.
 	g add: d.
 	^g
 	
