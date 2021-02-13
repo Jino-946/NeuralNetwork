@@ -497,6 +497,8 @@ NeuronFigures >> figure4_6 [
 		result add: mse.
 	].
 	
+	Transcript cr; show: a.
+	Transcript cr; show: b.
 	
 	g := RTGrapher new.
 	d := RTData new.
