@@ -516,3 +516,60 @@ NeuronFigures >> figure4_6 [
 	^ g
 	
 ]
+
+{ #category : #example }
+NeuronFigures >> figure4_7 [
+	"P84  Figure 4-7
+	 
+	 Result of the stochastic gradient descent
+	 
+	 NeuronFigures new figure4_7
+	"
+	|nbOfPoints r a b f points learningRate deriMSEa deriMSEb result mse g d 
+	 currentBatch miniBatches batchSize accumulatedMse|
+	nbOfPoints := 100.
+	r := Random seed: 42.
+	
+	points := (1 to: nbOfPoints ) collect: [ :i |
+		(i / nbOfPoints) asFloat @ ((r next * 40 - 20 + i) / nbOfPoints) asFloat ].
+	currentBatch := OrderedCollection new.
+	miniBatches := OrderedCollection new.
+	batchSize := 5.
+	1 to: points size do:  [ :index |
+		currentBatch add: (points at: index).
+		index \\ batchSize  = 0
+			ifTrue: [  miniBatches add: currentBatch copy.
+						currentBatch := OrderedCollection new. ]].
+	miniBatches .
+	
+	a := 0.5.
+	b := 3.
+	f := [ :x | a * x + b ].
+	learningRate := 0.01.
+	
+	result := OrderedCollection new.
+	5000 timesRepeat: [
+		accumulatedMse := 0.
+		miniBatches do: [ :pointsBatch |  
+			deriMSEa := (2 / pointsBatch size) * (pointsBatch collect: [ :aPoint | 
+				aPoint x * (aPoint y - (f value: aPoint x)) negated ]) sum.
+			deriMSEb := (2 / pointsBatch size) * (pointsBatch collect: [ :aPoint |
+				1 * ( aPoint y - (f value: aPoint x)) negated ]) sum.
+			a := a - (learningRate * deriMSEa).
+			b := b - (learningRate * deriMSEb).
+			mse := (pointsBatch collect: [ :aPoint | 
+				(aPoint y - (f value: aPoint x)) squared ]) sum / points size.
+			accumulatedMse := accumulatedMse + mse.
+		].
+		result add: accumulatedMse 
+	].
+	
+	g := RTGrapher new.
+	d := RTData new.
+	d noDot; connectColor: Color blue.
+	d points: result.
+	d y: #yourself.
+	g add: d.	
+	^ g
+	
+]
