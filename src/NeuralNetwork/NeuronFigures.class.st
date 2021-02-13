@@ -485,7 +485,7 @@ NeuronFigures >> figure4_6 [
 	learningRate := 0.01.
 	
 	result := OrderedCollection new.
-	1000 timesRepeat: [ 
+	5000 timesRepeat: [ 
 		deriMSEa := (2 / points size) * (points collect: [ :aPoint | 
 			aPoint x * (aPoint y - (f value: aPoint x)) negated ]) sum.
 		deriMSEb := (2 / points size) * (points collect: [ :aPoint |
@@ -497,9 +497,6 @@ NeuronFigures >> figure4_6 [
 		result add: mse.
 	].
 	
-	Transcript cr; show: a.
-	Transcript cr; show: b.
-	
 	g := RTGrapher new.
 	d := RTData new.
 	d dotShape color: Color red.
@@ -507,6 +504,7 @@ NeuronFigures >> figure4_6 [
 	d y: #y.
 	d x: #x.
 	g add: d.
+	
 	
 	d2 := RTData new.
 	d2 noDot; connectColor: Color blue.
