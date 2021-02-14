@@ -95,11 +95,46 @@ NeuralNetwork >> outputLayer [
 ]
 
 { #category : #initialization }
+NeuralNetwork >> predict: inputs [
+	" 予測を行う。このメソッドはネットワークの出力数と同じ出力数であることを想定している"
+ 	"Pharo ではコレクションの添字は1から始まる"
+	| outputs |
+	outputs := self feed: inputs.
+	^ (outputs  indexOf: (outputs max)) - 1 
+]
+
+{ #category : #initialization }
 NeuralNetwork >> train: someInputs desiredOutputs: desiredOutputs [
 	"ニューラルネットワークを入力値と期待する出力でトレーニングする"
 	self feed: someInputs .
 	self backwardPropagateError: desiredOutputs .
 	self updateWeight: someInputs 
+]
+
+{ #category : #initialization }
+NeuralNetwork >> train: train nbEpochs: nbEpochs [
+	"訓練用のデータセットを用いネットワークを訓練する"
+	| sumError outputs expectedOutput epochPrecision t |
+	1 to: nbEpochs do: [ :epoch |
+		sumError := 0.
+		epochPrecision := 0.
+		train do: [ :row |
+			outputs := self feed: row allButLast .
+			expectedOutput := (1 to: self numberOfOutputs) collect: [ :notUsed | 0 ].
+			expectedOutput at: (row last) + 1 put: 1.
+			(row last = (self predict: row allButLast))
+				ifTrue: [ epochPrecision := epochPrecision  + 1 ].
+			t := (1 to: expectedOutput size) collect: [ :i |
+				((expectedOutput  at: i) - (outputs at: i )) squared
+				 ]. 
+			sumError := sumError + t sum.
+			self backwardPropagateError: expectedOutput .
+			self updateWeight: row allButLast .
+		].
+		errors  add: sumError .
+		precisions add: (epochPrecision  / train size) asFloat.
+	]
+   
 ]
 
 { #category : #initialization }
