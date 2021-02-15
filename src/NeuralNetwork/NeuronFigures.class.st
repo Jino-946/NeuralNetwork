@@ -430,7 +430,7 @@ NeuronFigures >> figure4_5 [
 	 NeuronFigures new figure4_4
 	"
 	|nbOfPoints r a b f points learningRate deriMSEa deriMSEb result mse g d |
-	nbOfPoints := 100.
+  	nbOfPoints := 100.
 	r := Random seed: 42.
 	
 	points := (1 to: nbOfPoints ) collect: [ :i |
