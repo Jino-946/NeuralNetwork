@@ -24,7 +24,7 @@ ManifestNeuralNetwork class >> ruleRBImplementedNotSentRuleV1FalsePositive [
 
 { #category : #'code-critics' }
 ManifestNeuralNetwork class >> ruleRBLongMethodsRuleV1FalsePositive [
-	^ #(#(#(#RGClassDefinition #(#NeuronFigures)) #'2021-01-17T14:44:33.706312+09:00') )
+	^ #(#(#(#RGClassDefinition #(#NeuronFigures)) #'2021-01-17T14:44:33.706312+09:00') #(#(#RGMethodDefinition #(#NeuralNetwork #viewLearningVUrve #false)) #'2021-02-17T16:38:42.720109+09:00') #(#(#RGMethodDefinition #(#NeuralNetwork #viewLearningCurve #false)) #'2021-02-17T16:51:04.06286+09:00') )
 ]
 
 { #category : #'code-critics' }

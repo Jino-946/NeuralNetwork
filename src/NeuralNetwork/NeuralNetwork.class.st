@@ -143,3 +143,50 @@ NeuralNetwork >> updateWeight: initialInputs [
 	"初期の入力値を用いニューロンの重みを更新する"
 	layers first updateWeight: initialInputs 
 ]
+
+{ #category : #initialization }
+NeuralNetwork >> viewLearningCurve [
+	"エラー曲線と精度曲線を描く"
+	| b ds |
+	"ネットワークが実行されていない時は描く物はない"
+	errors ifEmpty: [  ^RTView new 
+		add: (RTLabel elementOn: 'ネットワークを実行して下さい。');
+		yourself 
+	].
+
+	b := RTDoubleGrapher new.
+	"グラフ描画領域のサイズを定義する"
+	b extent: 500 @ 300.
+	ds := RTData new.
+	"Roassal が提供する簡単な最適化"
+	ds samplingIfMoreThan: 2000.
+	"点は不要、曲線だけで良い"
+	ds noDot; connectColor: Color blue.
+	ds points: (errors collectWithIndex: [ :y :i | i -> y]).
+	ds x: #key.
+	ds y: #value.
+	ds dotShape rectangle color: Color blue.
+	b add: ds.
+	
+	ds := RTData new.
+	ds samplingIfMoreThan: 2000.
+	ds noDot.
+	ds connectColor: Color red.
+	ds points: (precisions collectWithIndex: [ :y :i | i -> y]).
+	ds x: #key.
+	ds y: #value.
+	ds dotShape rectangle color: Color blue .
+	b addRight: ds.
+	b axisX noDecimal ; title: 'エポック'.
+	b axisY title: 'エラー'; color: Color blue.
+	b axisYRight title: '精度'; color: Color red.
+	^ b
+]
+
+{ #category : #initialization }
+NeuralNetwork >> viewLearningCurveIn: composite [
+	<gtInspectorPresentationOrder: -10>
+	composite roassal2 
+		title: 'Learning';
+		initializeView: [ self viewLearningCurve ]
+]
