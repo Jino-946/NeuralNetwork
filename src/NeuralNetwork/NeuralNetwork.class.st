@@ -83,6 +83,18 @@ NeuralNetwork >> learningRate: aLearningRate [
 ]
 
 { #category : #initialization }
+NeuralNetwork >> numberOfInputs [
+	"Return the number of inputs the network has"
+	^ layers first neurons size
+]
+
+{ #category : #initialization }
+NeuralNetwork >> numberOfNeurons [
+	"Return the number of neurons the network has"
+	^ (layers collect: #numberOfNeurons ) sum 
+]
+
+{ #category : #initialization }
 NeuralNetwork >> numberOfOutputs [
 	" ネットワークの出力数を返す"
 	^ layers last numberOfNeurons 
@@ -189,4 +201,36 @@ NeuralNetwork >> viewLearningCurveIn: composite [
 	composite roassal2 
 		title: 'Learning';
 		initializeView: [ self viewLearningCurve ]
+]
+
+{ #category : #initialization }
+NeuralNetwork >> viewNetwork [
+	| b lb |
+	b := RTMondrian new.
+	b nodes: layers forEach: [ :aLayer |
+ 		b shape circle size: 20.
+		b nodes: aLayer neurons .
+		b layout verticalLine .	
+	].
+
+	b shape arrowedLine ; withShorterDistanceAttachPoint .
+	b edges connectTo: #nextLayer.
+	b layout horizontalLine gapSize: 30; center .
+	
+	b build.
+	
+	lb := RTLegendBuilder new.
+	lb view: b view.
+	lb addText: self numberOfNeurons asString, ' neurons'.
+	lb addText: self numberOfInputs asString, ' inputs'.
+	lb build.
+	^ b view 
+]
+
+{ #category : #initialization }
+NeuralNetwork >> viewNetworkIn: composite [
+	<gtInspectorPresentationOrder: -5>
+	composite roassal2 
+		title: 'Network';
+		initializeView: [ self viewNetwork ]
 ]
