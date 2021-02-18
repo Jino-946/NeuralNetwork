@@ -102,13 +102,13 @@ Neuron >> step [
 
 { #category : #accessing }
 Neuron >> train: inputs desiredOutput: desiredOutput [
-	| diff output delta |
-	output := self feed: inputs.
-	diff := desiredOutput - output .
-    delta := diff * (activationFunction derivative: output).
+	| diff _output _delta |
+	_output := self feed: inputs.
+	diff := desiredOutput - _output .
+    _delta := diff * (activationFunction derivative: _output).
 	inputs withIndexDo: [ :anInput :index |
-		weights at: index put: ((weights at: index) + (delta * anInput * learningRate))].
-	bias := bias + (delta * learningRate)
+		weights at: index put: ((weights at: index) + (learningRate * _delta * anInput))].
+	bias := bias + (learningRate * _delta)
 ]
 
 { #category : #accessing }

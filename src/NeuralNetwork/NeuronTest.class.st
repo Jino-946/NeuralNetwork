@@ -11,7 +11,7 @@ NeuronTest >> testTrainingAND [
 	p weights: #(-1 -1).
 	p bias: 2.
 	
-	10000 timesRepeat: [ 
+	6000 timesRepeat: [ 
 			p train: #(0 0) desiredOutput: 0.
 			p train: #(0 1) desiredOutput: 0.
 			p train: #(1 0) desiredOutput: 0.
