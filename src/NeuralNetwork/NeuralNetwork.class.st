@@ -11,13 +11,12 @@ Class {
 
 { #category : #utilities }
 NeuralNetwork class >> irisData [
-	"インターネットからiris.csvを取得し5章のスクリプトで使用する
-	 Iris Datasetに変換し返すユーティリティメソッド"
+	"インターネットからiris.csvを取得し5章のスクリプトで使用するIris Datasetに変換し返す。
+	 ユーティリティメソッド(クラスメソッド)"
 	
 	| irisCSV lines tLines irisData |
 	irisCSV := (ZnEasy get: 'https://agileartificialintelligence.github.io/Datasets/iris.csv') contents. 
-	lines := irisCSV lines.
-	lines := lines allButFirst.
+	lines := irisCSV lines allButFirst.
 	tLines := lines collect: [  :l |
 		| ss |
 		ss := l substrings: ','.
