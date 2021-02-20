@@ -9,6 +9,32 @@ Class {
 	#category : #NeuralNetwork
 }
 
+{ #category : #utilities }
+NeuralNetwork class >> irisData [
+	"インターネットからiris.csvを取得し5章のスクリプトで使用する
+	 Iris Datasetに変換し返すユーティリティメソッド"
+	
+	| irisCSV lines tLines irisData |
+	irisCSV := (ZnEasy get: 'https://agileartificialintelligence.github.io/Datasets/iris.csv') contents. 
+	lines := irisCSV lines.
+	lines := lines allButFirst.
+	tLines := lines collect: [  :l |
+		| ss |
+		ss := l substrings: ','.
+		(ss allButLast collect: [ :w | w asNumber ]), (Array with: ss last)
+	].
+	
+	irisData := tLines collect: [ :row |
+		| l |
+		row last = 'setosa' ifTrue: [ l := #(0) ].
+		row last = 'versicolor' ifTrue: [ l := #(1) ].
+		row last = 'virginica' ifTrue: [ l := #(2) ].
+		row allButLast, l
+	].
+
+	^irisData 
+]
+
 { #category : #initialization }
 NeuralNetwork >> addLayer: aNeuronLayer [
 	" ニューロン層を追加する。追加される層はすでに存在している層にリンクされる。"
