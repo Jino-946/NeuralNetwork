@@ -196,6 +196,28 @@ MMatrix >> newArrayFromHandle: aHandle [
 ]
 
 { #category : #initialization }
+MMatrix >> printOn: aStream [
+	"ストリームにマトリックスを小数点以下4桁でプリントする"
+    
+    self printOn: aStream round: 4
+]
+
+{ #category : #initialization }
+MMatrix >> printOn: aStream round: nbDecimals [
+	"マトリックスをストリームにプリントする。すべての数値は固定の桁数に丸められる"
+    
+    aStream nextPutAll: '('. 
+    	(1 to: nbRows) do: [ :r |
+    		(self atRow: r) do: [ :each |
+            	aStream nextPutAll: (each round: nbDecimals) printString
+    		]
+           separatedBy: [aStream space]
+		]
+       separatedBy: [ aStream cr].
+    aStream nextPutAll: ')'
+]
+
+{ #category : #initialization }
 MMatrix >> size [
 	"マトリックスに格納されている値の数"
     
