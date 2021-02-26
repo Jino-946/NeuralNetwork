@@ -20,6 +20,16 @@ MMatrix class >> newFromArrays: arrays [
 ]
 
 { #category : #'instance creation' }
+MMatrix class >> newFromVector: array [
+	""
+	
+	^self basicNew 
+		initializeRows: array size columns: 1;
+		fromContents: array;
+		yourself 
+]
+
+{ #category : #'instance creation' }
 MMatrix class >> newHandle: aHandle rows: numRows columns: numColumns [
 	""
 	
@@ -222,6 +232,21 @@ MMatrix >> size [
 	"マトリックスに格納されている値の数"
     
     ^ nbColumns * nbRows
+]
+
+{ #category : #initialization }
+MMatrix >> stretchToColumns: nbOfColumns [
+	"垂直ベクトルを列に展開する"
+    | content result |
+    content := OrderedCollection new.
+    1 to: nbRows do: [ :row |
+    1 to: nbOfColumns do: [ :columns |
+    		content add: (self at: row @ 1)
+    	].		
+	].
+    result := MMatrix newRows: nbRows columns: nbOfColumns.
+    result fromContents: content.
+    ^ result
 ]
 
 { #category : #initialization }

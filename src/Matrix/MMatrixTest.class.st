@@ -54,6 +54,17 @@ MMatrixTest >> testMax [
 ]
 
 { #category : #tests }
+MMatrixTest >> testStretching [
+	| m |
+	m := (MMatrix newFromVector: #(1 2 3 4)) stretchToColumns: 5.
+    self assert: m nbRows equals: 4.
+    self assert: m nbColumns equals: 5.
+    self assert: (m atRow: 1) equals: #(1 1 1 1 1).
+    self assert: (m atRow: 3) equals: #(3 3 3 3 3)
+
+]
+
+{ #category : #tests }
 MMatrixTest >> testSumHorizontal [
 	| m expectedResult |
 	m := MMatrix newFromArrays: #(#(1.0 2.0) #(3.0 4.0) #(5.0 6.0)).
@@ -61,4 +72,13 @@ MMatrixTest >> testSumHorizontal [
 	
 	self assert: m sumHorizontal asStructuredArray 
 			equals: expectedResult asStructuredArray 
+]
+
+{ #category : #tests }
+MMatrixTest >> testVectorCreation [
+	| v |
+    v := MMatrix newFromVector: #(1 2 3).
+    self assert: v nbColumns equals: 1.
+    self assert: v nbRows equals: 3.
+    self assert: v asStructuredArray equals: #(#(1) #(2) #(3))
 ]
