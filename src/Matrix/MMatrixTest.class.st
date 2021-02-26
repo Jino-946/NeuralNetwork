@@ -39,6 +39,16 @@ MMatrixTest >> testAtPut [
 ]
 
 { #category : #tests }
+MMatrixTest >> testCollect [
+	
+    | m expectedMatrix |
+    m := MMatrix newFromArrays: #(#(1 2 3) #(4 5 6)).
+    expectedMatrix := MMatrix newFromArrays: #(#(2 3 4) #(5 6 7)).
+    self assert: (m collect: [ :v | v + 1]) asStructuredArray 
+    		equals: expectedMatrix asStructuredArray
+]
+
+{ #category : #tests }
 MMatrixTest >> testCreation [ 
 	| m |
 	m := MMatrix newFromArrays: #(#(1 2) #(3 4)).
@@ -51,6 +61,32 @@ MMatrixTest >> testMax [
     m := MMatrix newFromArrays: #(#(1 2) #(3 4)).
     self assert: m max equals: 4
 
+]
+
+{ #category : #tests }
+MMatrixTest >> testMultiplicationOnMatrix [
+	| x |
+    x := MMatrix newFromArrays: #(#(1 2 3 4) #(10 20 30 40)).
+    self assert: (x * 5) asStructuredArray
+    	equals: #(#(5.0 10.0 15.0 20.0) #(50.0 100.0 150.0 200.0))
+]
+
+{ #category : #tests }
+MMatrixTest >> testMultiplicationOnVector [
+	| x |
+    x := MMatrix newFromVector: #(1 2 3 4).
+    self assert: (x * 5) asStructuredArray
+    		equals: #(#(5.0) #(10.0) #(15.0) #(20.0))
+]
+
+{ #category : #tests }
+MMatrixTest >> testMultiplicationPerElement [
+	| v1 v2 expectedVector |
+	v1 := MMatrix newFromVector: #(1 2 3).
+	v2 := MMatrix newFromVector: #(10 20 30).
+	expectedVector := MMatrix newFromVector: #(10 40 90).
+	self assert: (v1 multiplyPerElement: v2) asArray
+		equals: expectedVector asArray
 ]
 
 { #category : #tests }

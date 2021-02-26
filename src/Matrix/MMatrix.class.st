@@ -48,6 +48,13 @@ MMatrix class >> newRows: numRows columns: numColumns [
 ]
 
 { #category : #initialization }
+MMatrix >> * aFactor [
+	"マトリックスの各要素にaFactorを掛ける"
+    
+    ^ self collect: [ :v | v * aFactor]
+]
+
+{ #category : #initialization }
 MMatrix >> + matrixOrVector [
 	"レシーバにマトリックスまたはベクトルを加算する。
     引数には同じサイズのマトリックスかベクトルをとる。
@@ -134,6 +141,20 @@ MMatrix >> atRow: rowNumber [
 ]
 
 { #category : #initialization }
+MMatrix >> collect: aOneArgBlock [
+	"引数で与えられたブロックを使って変換した要素を持つ新しいマトリックスを返す"
+    
+    | result |
+    result := MMatrix newRows: nbRows columns: nbColumns.
+    1 to: nbRows do: [ :y |
+    	1 to: nbColumns do: [ :x |
+        	result at: y @ x put: (aOneArgBlock value: (self at: y @ x))
+    	].
+	].
+    ^ result
+]
+
+{ #category : #initialization }
 MMatrix >> fromContents: content [
 	"マトリックスを線形コンテントで初期化する"
     
@@ -170,6 +191,19 @@ MMatrix >> initializeRows: numRows columns: numColumns [
 MMatrix >> max [
 	"マトリックスの最大値を返す"
     ^ self asArray max
+]
+
+{ #category : #initialization }
+MMatrix >> multiplyPerElement: mat [
+	"2つのマトリックスで要素同士を乗算する"
+    
+    | r |
+    self assert: [nbRows = mat nbRows].
+    self assert: [nbColumns = mat nbColumns].
+    r := MMatrix newRows: nbRows columns: nbColumns.
+    r fromContents: (self asArray with: 
+    		mat array asArray collect: [ :a :b | a * b ]).
+    ^ r
 ]
 
 { #category : #initialization }
