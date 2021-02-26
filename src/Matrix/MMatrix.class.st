@@ -70,6 +70,20 @@ MMatrix >> + matrixOrVector [
 ]
 
 { #category : #initialization }
+MMatrix >> +* anotherMatrix [
+	" dot:メソッドのショートカット"
+    
+    ^ self dot: anotherMatrix
+]
+
+{ #category : #initialization }
+MMatrix >> / value [
+	"マトリックスの各要素をvalueで割る"
+    
+    ^self collect: [ :v | v / value]
+]
+
+{ #category : #initialization }
 MMatrix >> add: aMatrix [
 	"レシーバと引数の２つのマトリックスを加算し、新しいマトリックスを生成する"
     
@@ -152,6 +166,34 @@ MMatrix >> collect: aOneArgBlock [
     	].
 	].
     ^ result
+]
+
+{ #category : #initialization }
+MMatrix >> dot: anotherMatrix [
+	"レシーバ・マトリックスと引数の積を計算する"
+    
+    | result resultArray |
+    nbColumns = anotherMatrix nbRows ifFalse: [self error: 'dimensions do not confirm'].
+    self assert: [ nbRows * nbColumns = array size].
+    self assert: [ anotherMatrix nbRows * anotherMatrix nbColumns = anotherMatrix size].
+    
+    resultArray := ByteArray new: (nbRows * anotherMatrix nbColumns * 8).
+    self dot: self getHandle with: nbRows with: nbColumns with: anotherMatrix getHandle
+    						with: anotherMatrix nbRows with: anotherMatrix nbColumns
+                            in: resultArray.
+    result := MMatrix newHandle: resultArray rows: nbRows columns: anotherMatrix nbColumns.
+    ^ result
+]
+
+{ #category : #initialization }
+MMatrix >> dot: array1 with: m1_nb_rows with: m1_nb_columns with: array2
+		with: m2_nb_rows with: m2_nb_columns in: res [
+	"Cライブラリを呼び出してドット演算子を実行する"
+    
+    ^ self
+    	ffiCall: #(void dot(void *array1, int m1_nb_rows, int m1_nb_columns,
+        		void *array2, int m2_nb_rows, int m2_nb_columns, void *res))
+        module: 'libmatrix.so'
 ]
 
 { #category : #initialization }

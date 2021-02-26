@@ -56,6 +56,22 @@ MMatrixTest >> testCreation [
 ]
 
 { #category : #tests }
+MMatrixTest >> testDivision [
+	| m |
+    m := MMatrix newFromArrays: #(#(1 2 3) #(4 5 6)).
+    self assert: (m / 2) asStructuredArray equals: #(#(0.5 1.0 1.5) #(2.0 2.5 3.0))
+]
+
+{ #category : #tests }
+MMatrixTest >> testMatrixProduct [
+	| m1 m2 |
+    m1 := MMatrix newFromArrays: #(#(1 2 3 4) #(5 6 7 8)).
+    m2 := MMatrix newFromArrays: #(#(1 2) #(3 4) #(5 6) #(7 8)).
+    self assert: (m1 +* m2) asStructuredArray
+    	equals: #(#(50.0 60.0) #(114.0 140.0))
+]
+
+{ #category : #tests }
 MMatrixTest >> testMax [
 	| m |
     m := MMatrix newFromArrays: #(#(1 2) #(3 4)).
