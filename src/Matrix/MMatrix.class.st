@@ -77,6 +77,13 @@ MMatrix >> +* anotherMatrix [
 ]
 
 { #category : #initialization }
+MMatrix >> - anotherMatrix [
+	"レシーバ・マトリックスからanotherMatrixを減算する"
+    
+    ^ self sub: anotherMatrix
+]
+
+{ #category : #initialization }
 MMatrix >> / value [
 	"マトリックスの各要素をvalueで割る"
     
@@ -323,6 +330,32 @@ MMatrix >> stretchToColumns: nbOfColumns [
     result := MMatrix newRows: nbRows columns: nbOfColumns.
     result fromContents: content.
     ^ result
+]
+
+{ #category : #initialization }
+MMatrix >> sub: anotherMatrix [
+	| result resultArray |
+    nbColumns = anotherMatrix nbColumns 
+    		ifFalse: [self error: 'dimensions do not confirm'].
+    nbRows = anotherMatrix nbRows
+    		ifFalse: [self error: 'dimensions do not confirm'].
+    resultArray := ByteArray new: (nbRows * anotherMatrix nbColumns * 8).
+    self assert: [ nbRows * nbColumns = array size].
+    self assert: [ anotherMatrix nbRows * anotherMatrix nbColumns = anotherMatrix size].
+    self assert: [ nbRows * anotherMatrix nbColumns * 8 = resultArray size].
+    self
+    	sub: self getHandle with: nbRows with: nbColumns with: anotherMatrix getHandle
+        in: resultArray.
+    result := MMatrix newHandle: resultArray rows: nbRows columns: nbColumns.
+    ^ result
+]
+
+{ #category : #initialization }
+MMatrix >> sub: m1 with: nb_rows with: nb_columns with: m2 in: res [
+	^ self
+    	ffiCall: #(void sub(double *m1, int nb_rows, int nb_columns,
+        			double *m2, double *res))
+        module: 'libmatrix.so'
 ]
 
 { #category : #initialization }
