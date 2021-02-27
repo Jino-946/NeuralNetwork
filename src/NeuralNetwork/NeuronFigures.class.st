@@ -610,3 +610,52 @@ NeuronFigures >> figure5_5 [
 	g legend addText: 'Learning rate(lr) effect'.
 	^g
 ]
+
+{ #category : #example }
+NeuronFigures >> figure6_1 [
+	""
+	
+	| n din h dout r x y w1 w2 learningRate losses hh hrelu ypred loss 
+	gradYPred gradW2 gradHRelu gradH gradW1 g d|
+	
+	n := 8.		""
+	din := 10.
+	h := 20.
+	dout := 5.
+	
+	r := Random seed: 42.
+	x := (MMatrix newRows: n columns: din ) random: r.
+	y := (MMatrix newRows: n columns: dout ) random: r.
+	w1 := (MMatrix newRows: din columns: h ) random: r.
+	w2 := (MMatrix newRows: h columns: dout ) random: r.
+	
+	learningRate := 1e-6.
+	losses := OrderedCollection new.
+	1500 timesRepeat: [ 
+		hh := x +* w1.
+		hrelu := hh collect: [ :v | v max: 0 ].
+		ypred := hrelu +* w2.
+		"Compute and print loss"
+		loss := ((ypred - y) collect: [ :vv | vv * vv ]) sum.
+		losses add: loss.
+		
+		gradYPred := (ypred - y) * 2.0.
+		gradW2 := hrelu transposed +* gradYPred .
+		gradHRelu := gradYPred +* w2 transposed.
+		gradH := gradHRelu collect: [  :v | v max: 0 ].
+		gradW1 := x transposed +* gradH.
+		
+		w1 := w1 - (gradW1 * learningRate).
+		w2 := w2 - (gradW2 * learningRate). 
+	].
+
+	g := RTGrapher new.
+	d := RTData new.
+	d noDot; connectColor: Color blue.
+	d points: losses.
+	d y: #yourself.
+	g add: d.
+	g axisX title: 'Epoch'.
+	g axisY title: 'Error'.
+	^ g
+]

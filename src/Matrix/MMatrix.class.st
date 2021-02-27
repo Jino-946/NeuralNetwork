@@ -180,7 +180,7 @@ MMatrix >> dot: anotherMatrix [
 	"レシーバ・マトリックスと引数の積を計算する"
     
     | result resultArray |
-    nbColumns = anotherMatrix nbRows ifFalse: [self error: 'dimensions do not confirm'].
+    nbColumns  = anotherMatrix nbRows ifFalse: [self error: 'dimensions do not confirm'].
     self assert: [ nbRows * nbColumns = array size].
     self assert: [ anotherMatrix nbRows * anotherMatrix nbColumns = anotherMatrix size].
     
@@ -311,6 +311,22 @@ MMatrix >> printOn: aStream round: nbDecimals [
 ]
 
 { #category : #initialization }
+MMatrix >> random [
+	"マトリックスを乱数で初期化する"
+    
+    ^ self random: Random new
+]
+
+{ #category : #initialization }
+MMatrix >> random: randomNumberGenerator [
+	"マトリックスを乱数で初期化する。乱数ジェネレータを引数にとる"
+    
+    self fromContents: ((1 to: nbRows * nbColumns) collect: [ :vv |
+		randomNumberGenerator next
+	])
+]
+
+{ #category : #initialization }
 MMatrix >> size [
 	"マトリックスに格納されている値の数"
     
@@ -359,6 +375,21 @@ MMatrix >> sub: m1 with: nb_rows with: nb_columns with: m2 in: res [
 ]
 
 { #category : #initialization }
+MMatrix >> sum [
+	"マトリックスの値の合計を返す"
+    
+    | sum |
+    sum := 0.
+    1 to: nbRows do: [ :y |
+    	1 to: nbColumns do: [ :x |
+    		sum := sum + (self at: y @ x)
+    	].
+	].
+    ^ sum
+    
+]
+
+{ #category : #initialization }
 MMatrix >> sumHorizontal [
 	"Horizontal summing"
 	
@@ -372,4 +403,18 @@ MMatrix >> sumHorizontal [
 		result at: y @ 1 put: sum
 	].
 	^ result
+]
+
+{ #category : #initialization }
+MMatrix >> transposed [
+	"マトリックスを転置する"
+    
+    | result |
+    result := MMatrix newRows: nbColumns columns: nbRows.
+    1 to: nbRows do: [ :row |
+    	1 to: nbColumns do: [ : column |
+        	result at: column @ row put: (self at: row @ column)
+    	]
+	].
+    ^ result
 ]

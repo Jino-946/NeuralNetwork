@@ -125,6 +125,14 @@ MMatrixTest >> testSub [
 ]
 
 { #category : #tests }
+MMatrixTest >> testSum [
+
+	| m |
+	m := MMatrix newFromArrays: #(#(1 2 3 4) #(5 6 7 8)).
+	self assert: m sum equals: (1 to: 8) sum
+]
+
+{ #category : #tests }
 MMatrixTest >> testSumHorizontal [
 	| m expectedResult |
 	m := MMatrix newFromArrays: #(#(1.0 2.0) #(3.0 4.0) #(5.0 6.0)).
@@ -132,6 +140,21 @@ MMatrixTest >> testSumHorizontal [
 	
 	self assert: m sumHorizontal asStructuredArray 
 			equals: expectedResult asStructuredArray 
+]
+
+{ #category : #tests }
+MMatrixTest >> testTransposed [
+	| m expectedResult |
+    m := MMatrix newFromArrays: #(#(1 2 3 4) #(5 6 7 8)).
+    expectedResult := MMatrix newFromArrays: #(#(1 5) #(2 6) #(3 7) #(4 8)).
+    self assert: m transposed asStructuredArray equals: expectedResult asStructuredArray
+]
+
+{ #category : #tests }
+MMatrixTest >> testTransposedOnVector [
+	| m |
+    m := MMatrix newFromVector: #(1 2 3).
+    self assert: m transposed asStructuredArray equals: #(#(1 2 3))
 ]
 
 { #category : #tests }
