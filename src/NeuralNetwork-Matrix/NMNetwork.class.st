@@ -47,6 +47,18 @@ NMNetwork >> computeCost: v1 and: v2 [
 ]
 
 { #category : #initialization }
+NMNetwork >> configure: nbOfInputs hidden: nbOfNeurons1 
+						hidden: nbOfNeurons2 nbOfOutPuts: nbOfOutputs [
+	"与えれれたパラメータによりネットワークを設定する。ネットワークは2つの隠れ層を持つ"
+    
+	self addLayer: (NMLayer new nbInputs: nbOfInputs  nbOutputs: nbOfNeurons1 random: random).
+    self addLayer: 
+    	(NMLayer  new nbInputs: nbOfNeurons1 nbOutputs: nbOfNeurons2 random: random).
+    self addLayer:
+    	(NMLayer  new nbInputs: nbOfNeurons2 nbOutputs: nbOfOutputs random: random)
+]
+
+{ #category : #initialization }
 NMNetwork >> configure: nbOfIputs hidden: nbOfNeurons nbOfOutputs: nbOfOutputs [
 	"与えれれたパラメータによりネットワークを設定する。ネットワークは1つの隠れ層のみ持つ"
     
