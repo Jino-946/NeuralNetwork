@@ -51,17 +51,16 @@ NMNetwork >> backwardX: x y: y [
     
     | lastLayer dz currentLayer |
     lastLayer := layers last.
-    dz := lastLayer output - y.
+    dz := lastLayer output - y. 
     lastLayer delta: dz.
-    currentLayer := lastLayer previous.
-    [ currentLayer notNil ] whileTrue: [
-        dz := (currentLayer next w transposed +* dz)
-        	multiplyPerElement: (currentLayer output collect: [ : v |
-    			v * (1 - v)
-    		]).
+    currentLayer := lastLayer previous. 
+    [ currentLayer notNil ] whileTrue: [ 
+        dz := (currentLayer next w transposed +* dz) 
+                    multiplyPerElement: (currentLayer output collect: [ :v | v * (1 - v) ]).
         currentLayer delta: dz.
         currentLayer := currentLayer previous.
-	]
+    ].
+
 ]
 
 { #category : #initialization }
@@ -76,19 +75,19 @@ NMNetwork >> configure: nbOfInputs hidden: nbOfNeurons1
 						hidden: nbOfNeurons2 nbOfOutPuts: nbOfOutputs [
 	"与えれれたパラメータによりネットワークを設定する。ネットワークは2つの隠れ層を持つ"
     
-	self addLayer: (NMLayer new nbInputs: nbOfInputs  nbOutputs: nbOfNeurons1 random: random).
-    self addLayer: 
-    	(NMLayer  new nbInputs: nbOfNeurons1 nbOutputs: nbOfNeurons2 random: random).
-    self addLayer:
-    	(NMLayer  new nbInputs: nbOfNeurons2 nbOutputs: nbOfOutputs random: random)
+    self addLayer: (NMLayer new nbInputs: nbOfInputs nbOutputs: nbOfNeurons1 random: random).
+    self addLayer: (NMLayer new nbInputs: nbOfNeurons1 nbOutputs: nbOfNeurons2 random: random).
+    self addLayer: (NMLayer new nbInputs: nbOfNeurons2 nbOutputs: nbOfOutputs random: random).
+
 ]
 
 { #category : #initialization }
-NMNetwork >> configure: nbOfIputs hidden: nbOfNeurons nbOfOutputs: nbOfOutputs [
+NMNetwork >> configure: nbOfInputs hidden: nbOfNeurons nbOfOutputs: nbOfOutputs [
 	"与えれれたパラメータによりネットワークを設定する。ネットワークは1つの隠れ層のみ持つ"
 	
- 	self addLayer: (NMLayer new nbInputs: nbOfIputs nbOutputs: nbOfNeurons random: random).   
-    self addLayer: (NMLayer  new nbInputs: nbOfNeurons nbOutputs: nbOfOutputs random: random)
+    self addLayer: (NMLayer new nbInputs: nbOfInputs nbOutputs: nbOfNeurons random: random).                                          
+    self addLayer: (NMLayer new nbInputs: nbOfNeurons nbOutputs: nbOfOutputs random: random).
+
 ]
 
 { #category : #initialization }
@@ -107,7 +106,8 @@ NMNetwork >> initialize [
 	
 	super initialize.
 	layers := OrderedCollection new.
-	random := Random seed: 42
+	random := Random seed: 42.
+	errors := OrderedCollection new.
 ]
 
 { #category : #initialization }
@@ -133,17 +133,18 @@ NMNetwork >> train: data nbEpochs: nbEpochs [
     
     | x y labels numberOfOutputs |
     x := (MMatrix newFromArrays: (data collect: #allButLast)) transposed.
-    layers do: [ :l | l numberOfExamples: data size].
+    layers do: [ :l | l numberOfExamples: data size ].
     labels := data collect: #last.
     numberOfOutputs := labels asSet size.
     labels := labels collect: [ :row |
-		| expectedOutput |
+        | expectedOutput |
         expectedOutput := Array new: numberOfOutputs withAll: 0.
         expectedOutput at: row + 1 put: 1.
         expectedOutput
-	].
+    ].  
     y := (MMatrix newFromArrays: labels) transposed.
     ^ self trainX: x y: y nbOfEpochs: nbEpochs
+
 ]
 
 { #category : #initialization }
@@ -151,15 +152,15 @@ NMNetwork >> trainX: x y: y nbOfEpochs: nbEpochs [
 	"ネットワークを期待値に対する入力のセットで訓練する"
     | cost output |
     "各層にサンプル数を伝える"
-    layers do: [ :l | l numberOfExamples: y nbColumns].
+    layers do: [ :l | l numberOfExamples: y nbColumns ].
     errors := OrderedCollection new.
-    nbEpochs timesRepeat: [
+    nbEpochs timesRepeat: [ 
         output := self feed: x.
         cost := self computeCost: output and: y.
-        self backwardX: x y: y.
+        self backwardX: x  y: y.
         self update: x.
         errors add: cost.
-	].
+    ].  
     ^ cost
 ]
 
@@ -173,8 +174,8 @@ NMNetwork >> update: input [
 { #category : #initialization }
 NMNetwork >> viewLearningCurve [ 
     | b ds |
-    errors
-        ifEmpty: [ ^ RTView new 
+	errors
+        ifEmpty: [ ^ RTView new
                 add: (RTLabel elementOn: 'Should first run the network');
                 yourself ].
     b := RTGrapher new.
@@ -184,19 +185,20 @@ NMNetwork >> viewLearningCurve [
     ds samplingIfMoreThan: 2000.
     ds noDot.
     ds connectColor: Color blue.
-    ds points: (errors collectWithIndex: [ :y :i | i -> y ]). 
+    ds points: (errors collectWithIndex: [ :y :i | i -> y ]).
     ds x: #key.
     ds y: #value.
     ds dotShape rectangle color: Color blue.
-    b add: ds. 
+    b add: ds.
     b axisX noDecimal; title: 'Epoch'.
     b axisY title: 'Error'.
-    ^ b 
+    ^ b
 
 ]
 
 { #category : #initialization }
-NMNetwork >> viewLearningCurveIn: composite [
+NMNetwork >> viewLearningCurveIn: composite [ 
+
     <gtInspectorPresentationOrder: -10>
     composite roassal2
         title: 'Cost';
