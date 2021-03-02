@@ -9,6 +9,31 @@ Class {
 	#category : #'NeuralNetwork-Matrix'
 }
 
+{ #category : #utilities }
+NMNetwork class >> irisData [
+	"インターネットからiris.csvを取得し5章のスクリプトで使用するIris Datasetに変換し返す。
+	 ユーティリティメソッド(クラスメソッド)"
+	
+	| irisCSV lines tLines irisData |
+	irisCSV := (ZnEasy get: 'https://agileartificialintelligence.github.io/Datasets/iris.csv') contents. 
+	lines := irisCSV lines allButFirst.
+	tLines := lines collect: [  :l |
+		| ss |
+		ss := l substrings: ','.
+		(ss allButLast collect: [ :w | w asNumber ]), (Array with: ss last)
+	].
+	
+	irisData := tLines collect: [ :row |
+		| l |
+		row last = 'setosa' ifTrue: [ l := #(0) ].
+		row last = 'versicolor' ifTrue: [ l := #(1) ].
+		row last = 'virginica' ifTrue: [ l := #(2) ].
+		row allButLast, l
+	].
+
+	^irisData 
+]
+
 { #category : #initialization }
 NMNetwork >> addLayer: aLayer [
 	"ネットワークに層を加える。層は双方向に接続することに注意すること"
