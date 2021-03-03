@@ -161,7 +161,7 @@ NMNetwork >> trainX: x y: y nbOfEpochs: nbEpochs [
         self update: x.
         errors add: cost.
     ].  
-    ^ cost
+  
 ]
 
 { #category : #initialization }
@@ -175,7 +175,7 @@ NMNetwork >> update: input [
 NMNetwork >> viewLearningCurve [ 
     | b ds |
 	errors
-        ifEmpty: [ ^ RTView new
+        ifNil: [ ^ RTView new
                 add: (RTLabel elementOn: 'Should first run the network');
                 yourself ].
     b := RTGrapher new.
