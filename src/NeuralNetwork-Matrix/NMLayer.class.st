@@ -43,7 +43,7 @@ NMLayer >> delta: deltaMatrix [
 { #category : #initialization }
 NMLayer >> feed: inputMatrix [
 	"入力マトリックスと共に層を送出する"
-    
+	
     output := (w +* inputMatrix + b) collect: [ :v | 1 / (1 + v negated exp)].
     ^ output
 ]
@@ -123,7 +123,7 @@ NMLayer >> previous: aLayer [
 NMLayer >> update [
 	"デルタ値を使って重みとバイアスを更新する"
     
-    w := w - ((delta * previous output transposed) * lr / numberOfExamples).
+    w := w - ((delta +* previous output transposed) * lr / numberOfExamples).
     b := b - (delta sumHorizontal * lr / numberOfExamples).
     next ifNotNil: [ next update]
 ]
@@ -132,7 +132,7 @@ NMLayer >> update [
 NMLayer >> update: input [
 	"入力値を使って重みとバイアスを更新する"
     
-    w := w - ((delta * input transposed) * lr / numberOfExamples).
+    w := w - ((delta +* input transposed) * lr / numberOfExamples).
     b := b - (delta sumHorizontal * lr / numberOfExamples).
     next update
 ]
