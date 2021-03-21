@@ -8,6 +8,41 @@ Class {
 	#category : #'GeneticAlgorithm-Core'
 }
 
+{ #category : #'as yet unclassified' }
+GAIndividual class >> create: numberOfIndividuals individualsAndInitialize: numberOfGenes
+				    genesWith: geneBlockFactory [ 
+	"個体の母集団の生成を用意にするファクトリ・メソッド
+    	numberOfIndividuals: 返す個体数
+        numberOfGenes:		 各々の個体が持つ遺伝子数
+        geneBlockFactory:	 遺伝子を生成する引数を1つとるブロック
+        					 乱数ジェネレータを引数にとる     
+    "
+	^ self create: numberOfIndividuals individualsAndInitialize: numberOfGenes
+    		genesWith: geneBlockFactory using: (Random new seed: 42)
+
+]
+
+{ #category : #'as yet unclassified' }
+GAIndividual class >> create: numberOfIndividuals individualsAndInitialize: numberOfGenes
+				    genesWith: geneBlockFactory using: randomNumberGeneration [
+	"個体の母集団の生成を用意にするファクトリ・メソッド
+    	numberOfIndividuals: 返す個体数
+       numberOfGenes:		 各々の個体が持つ遺伝子数
+       geneBlockFactory:	 遺伝子を生成する引数を1つとるブロック
+        					 乱数ジェネレータを引数にとる
+       randomNumberGaneration: 乱数ジェネレータ     
+    "
+    | someIndividuals ind |
+    someIndividuals := OrderedCollection new.
+    numberOfIndividuals timesRepeat: [
+        ind := self new.
+        ind random: randomNumberGeneration.
+        ind set: numberOfGenes genesUsing: geneBlockFactory.
+        someIndividuals add: ind
+	].
+    ^ someIndividuals
+]
+
 { #category : #utilities }
 GAIndividual >> computeFitnessUsing: fitnessBlock [
 	"fitnessが未計算の時fitnessを計算する"
