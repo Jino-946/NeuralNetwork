@@ -8,7 +8,7 @@ Class {
 	#category : #'GeneticAlgorithm-Core'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #factories }
 GAIndividual class >> create: numberOfIndividuals individualsAndInitialize: numberOfGenes
 				    genesWith: geneBlockFactory [ 
 	"個体の母集団の生成を用意にするファクトリ・メソッド
@@ -22,7 +22,7 @@ GAIndividual class >> create: numberOfIndividuals individualsAndInitialize: numb
 
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #factories }
 GAIndividual class >> create: numberOfIndividuals individualsAndInitialize: numberOfGenes
 				    genesWith: geneBlockFactory using: randomNumberGeneration [
 	"個体の母集団の生成を用意にするファクトリ・メソッド
