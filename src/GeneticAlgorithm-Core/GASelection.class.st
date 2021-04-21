@@ -40,6 +40,37 @@ GASelection >> compareFitness: aTwoArgBlock [
     compareFitness := aTwoArgBlock
 ]
 
+{ #category : #'as yet unclassified' }
+GASelection >> createNewPopulation [
+	"新しい集団を生成する"
+    
+    self subclassResponsibility 
+]
+
+{ #category : #'as yet unclassified' }
+GASelection >> crossover: partnerA with: partnerB [
+	"２つの引数を交配した結果であるところの子供を返す"
+    
+    ^ engine crossover: partnerA with: partnerB
+]
+
+{ #category : #'as yet unclassified' }
+GASelection >> doSelection [
+	"選択アルゴリズムを用いて新しい集団を作る"
+    
+    self checkIfEngineSet.
+    self checkIfInitialPopulationSet.
+    populationSize := initialPopulation size.
+    fittest := initialPopulation first.
+    initialPopulation do: [ :ind |
+    	ind computeFitnessUsing: fitnessBlock.
+        (self isIndividual: ind betterThan: fittest)
+        	ifTrue: [ fittest := ind]
+	].
+    self createNewPopulation.
+    initialPopulation := population.
+]
+
 { #category : #initialization }
 GASelection >> engine [
 	"選択に関連するGAEngineを返す"
@@ -95,6 +126,20 @@ GASelection >> initialize [
     population := OrderedCollection new.
 ]
 
+{ #category : #'as yet unclassified' }
+GASelection >> isIndividual: ind betterThan: fittestIndividual [
+	"最初の個体が２番目より優れているか判定する"
+    
+    ^ engine isIndividual: ind betterThan: fittestIndividual
+]
+
+{ #category : #'as yet unclassified' }
+GASelection >> mutate: child [
+	"引数を変異する"
+    
+    ^ engine mutate: child
+]
+
 { #category : #initialization }
 GASelection >> population [
 	"新しいpopulationを返す"
@@ -107,4 +152,11 @@ GASelection >> populationSize [
 	"集団のサイズを返す"
     
     ^ initialPopulation size
+]
+
+{ #category : #'as yet unclassified' }
+GASelection >> randomNumber: value [
+	"1からvalueの間の乱数を返す"
+    
+    ^ engine randomNumber: value
 ]
