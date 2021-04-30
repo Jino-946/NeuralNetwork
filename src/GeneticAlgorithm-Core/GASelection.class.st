@@ -154,6 +154,13 @@ GASelection >> populationSize [
     ^ initialPopulation size
 ]
 
+{ #category : #initialization }
+GASelection >> populationSize: anInteger [ 
+	"集団のサイズをセットする"
+    
+    populationSize := anInteger 
+]
+
 { #category : #'as yet unclassified' }
 GASelection >> randomNumber: value [
 	"1からvalueの間の乱数を返す"
