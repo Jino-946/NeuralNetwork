@@ -114,6 +114,14 @@ GAEngine >> fitnessBlock: aOneArgBlock [
 ]
 
 { #category : #accessing }
+GAEngine >> gtInspectorLogsIn: composite [
+	<gtInspectorPresentationOrder: -5>
+    composite list
+    	title: 'Logs';
+        display: [ self logs ]
+]
+
+{ #category : #accessing }
 GAEngine >> gtInspectorViewIn: composite [
 	<gtInspectorPresentationOrder: -10>
     composite roassal2
