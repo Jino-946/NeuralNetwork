@@ -114,6 +114,14 @@ GAEngine >> fitnessBlock: aOneArgBlock [
 ]
 
 { #category : #accessing }
+GAEngine >> gtInspectorViewIn: composite [
+	<gtInspectorPresentationOrder: -10>
+    composite roassal2
+    	title: 'View';
+        initializeView: [ self visualize ]
+]
+
+{ #category : #accessing }
 GAEngine >> initialize [
 	super initialize.
     logs := OrderedCollection new.
@@ -281,4 +289,46 @@ GAEngine >> selection: aSelection [
 GAEngine >> shouldTerminate [
 	logs ifEmpty: [ ^ false ].
 	^ terminationBlock value
+]
+
+{ #category : #accessing }
+GAEngine >> visualize [
+	"母集団の進化を可視化する"
+    | g d |
+    g := RTGrapher new.
+    d := RTData new.
+    d label: 'Best fitness'.
+    d interaction popupText: [ :assoc | assoc value bestFitness ].
+    d connectColor: Color blue.
+    d noDot.
+    d points: self logs.
+    d y: #bestFitness.
+    d x: #generationNumber.
+    g add: d.
+    
+    d := RTData new.
+    d label: 'Worst fitness'.
+    d interaction popupText: [ :assoc | assoc value worseFitness ].
+    d connectColor: Color red.
+    d noDot.
+    d points: self logs.
+    d y: #worseFitness.
+    d x: #generationNumber.
+    g add: d.
+
+    d := RTData new.
+    d label: 'Averate fitness'.
+    d interaction popupText: [ :assoc | assoc value averageFitness ].
+    d connectColor: Color green.
+    d noDot.
+    d points: self logs.
+    d y: #averageFitness.
+    d x: #generationNumber.
+    g add: d.
+
+	g legend addText: 'Fitness evolution'.
+    g axisY title: 'Fitness'.
+    g axisX noDecimal; title: 'Generation'.
+    ^ g
+    
 ]

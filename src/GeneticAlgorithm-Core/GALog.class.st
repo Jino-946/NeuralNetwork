@@ -12,17 +12,17 @@ Class {
 }
 
 { #category : #accessing }
+GALog >> averageFitness [
+	"提示する世代の平均適合値を返す"
+    
+    ^ averageFitness
+]
+
+{ #category : #accessing }
 GALog >> averageFitness: aNumber [
 	"提示する世代の平均適合値をセットする"
     
     averageFitness := aNumber
-]
-
-{ #category : #accessing }
-GALog >> averageFitnesss [
-	"提示する世代の平均適合値を返す"
-    
-    ^ averageFitness
 ]
 
 { #category : #accessing }
