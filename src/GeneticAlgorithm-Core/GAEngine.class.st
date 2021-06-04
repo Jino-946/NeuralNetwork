@@ -325,7 +325,7 @@ GAEngine >> visualize [
     g add: d.
 
     d := RTData new.
-    d label: 'Averate fitness'.
+    d label: 'Average fitness'.
     d interaction popupText: [ :assoc | assoc value averageFitness ].
     d connectColor: Color green.
     d noDot.
