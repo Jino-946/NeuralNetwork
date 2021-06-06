@@ -28,8 +28,8 @@ GAMutationOperation >> doMutate: individual [
 ]
 
 { #category : #accessing }
-GAMutationOperation >> geneFactoryBlock: oneArgBlock [
-	"ブロックは引数として乱数１個とる"
+GAMutationOperation >> geneFactoryBlock: oneArBlock [ 
+	""
     
-    geneFactoryBlock := oneArgBlock
+    geneFactoryBlock := oneArBlock 
 ]

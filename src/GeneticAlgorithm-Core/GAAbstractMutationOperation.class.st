@@ -14,6 +14,11 @@ GAAbstractMutationOperation >> doMutate: individual [
 	self subclassResponsibility
 ]
 
+{ #category : #accessing }
+GAAbstractMutationOperation >> geneFactoryBlock: oneArgBlock [
+	"Do nothing. May be overridden if necessary"
+]
+
 { #category : #initalize }
 GAAbstractMutationOperation >> initialize [
 

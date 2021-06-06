@@ -202,7 +202,7 @@ GAEngine >> mutate: individual [
 { #category : #accessing }
 GAEngine >> mutationOperator: aMutationOperator [
 	mutationOperator := aMutationOperator.
-    mutationOperator random: random
+   aMutationOperator random: random
 ]
 
 { #category : #accessing }
@@ -290,7 +290,7 @@ GAEngine >> selection [
 GAEngine >> selection: aSelection [
 	"新しい母集団の作成に使う選択メソッドをセットする"
 	selection := aSelection.
-	selection engine: self
+	aSelection engine: self
 ]
 
 { #category : #accessing }
